@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/phil65/llmling-agent/refs/heads/main/schema/config-schema.json
+agents:
+  simple_agent:
+    provider:
+      type: pydantic_ai
+      model: openai:gpt-4o-mini
+    tools:
+      - type: import
+        import_path: webbrowser.open
+        description: "Open URL in browser"
+    system_prompts:
+      - "You are a helpful assistant."
