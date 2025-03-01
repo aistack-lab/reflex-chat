@@ -4,3 +4,4 @@ reflex-chakra>=0.6.0
 reflex-antd
 reflex-icon-library
 reflex-monaco
+reflex-local-auth
