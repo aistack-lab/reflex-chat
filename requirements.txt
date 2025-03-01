@@ -1,0 +1,6 @@
+llmling-agent[default]>=0.99.14
+reflex>=0.7.0
+reflex-chakra>=0.6.0
+reflex-antd
+reflex-icon-library
+reflex-monaco
