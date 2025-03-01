@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from typing import Any
 
-from llmling_agent import Agent, ChatMessage
+from llmling_agent import AgentPool, ChatMessage
 import reflex as rx
 
 
@@ -13,6 +13,9 @@ import reflex as rx
 if not os.getenv("OPENAI_API_KEY"):
     msg = "Please set OPENAI_API_KEY environment variable."
     raise Exception(msg)  # noqa: TRY002
+
+
+pool = AgentPool[None]("chat/agents.yml")
 
 
 class QA(rx.Base):
@@ -93,10 +96,7 @@ class State(rx.State):
 
         # Remove the last mock answer.
         messages = messages[:-1]
-        agent = Agent[None](
-            model="openai:gpt-4o-mini",
-            system_prompt="You are a friendly chatbot named Reflex. Respond in markdown.",
-        )
+        agent = pool.get_agent("simple_agent")
         async with agent.run_stream(question) as stream:
             # Stream the results, yielding after every word.
             async for chunk in stream.stream():
