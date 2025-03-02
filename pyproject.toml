@@ -13,6 +13,7 @@ dependencies = [
     "reflex-icon-library",
     "reflex-monaco",
     "reflex-local-auth",
+    "reflex-audio-capture",
 ]
 
 
