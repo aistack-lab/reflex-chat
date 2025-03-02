@@ -1,3 +1,5 @@
+"""Chat components."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -15,6 +17,10 @@ message_style: dict[str, Any] = dict(
     border_radius="8px",
     max_width=["30em", "30em", "50em", "50em", "50em", "50em"],
 )
+
+INPUT_MSG = "Enter a question to get a response."
+
+tooltip = rx.tooltip(rx.icon("info", size=18), content=INPUT_MSG)
 
 
 def message(qa: QA) -> rx.Component:
@@ -74,12 +80,7 @@ def action_bar() -> rx.Component:
                 rc.form_control(
                     rx.hstack(
                         rx.input(
-                            rx.input.slot(
-                                rx.tooltip(
-                                    rx.icon("info", size=18),
-                                    content="Enter a question to get a response.",
-                                )
-                            ),
+                            rx.input.slot(tooltip),
                             placeholder="Type something...",
                             id="question",
                             width=["15em", "20em", "45em", "50em", "50em", "50em"],

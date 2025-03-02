@@ -50,7 +50,7 @@ class State(rx.State):
             self.chats = DEFAULT_CHATS
         self.current_chat = next(iter(self.chats.keys()))
 
-    def set_chat(self, chat_name: str):
+    async def set_chat(self, chat_name: str):
         """Set the name of the current chat.
 
         Args:

@@ -1,8 +1,27 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import reflex as rx
 
 from chat.state import State
+
+
+if TYPE_CHECKING:
+    from reflex.components.radix.themes.components.button import Button
+
+
+MAUVE = rx.color("mauve", 12)
+CHAT_BADGE = rx.badge(
+    State.current_chat,
+    rx.tooltip(rx.icon("info", size=14), content="The current selected chat."),
+    variant="soft",
+)
+
+
+def get_button(tag: str) -> Button:
+    icon = rx.icon(tag=tag, color=MAUVE)
+    return rx.button(icon, background_color=rx.color("mauve", 6))
 
 
 def sidebar_chat(chat: str) -> rx.Component:
@@ -15,14 +34,14 @@ def sidebar_chat(chat: str) -> rx.Component:
         rx.hstack(
             rx.button(
                 chat,
-                on_click=lambda: State.set_chat(chat),
+                on_click=State.set_chat,  # pyright: ignore
                 width="80%",
                 variant="surface",
             ),
             rx.button(
                 rx.icon(
                     tag="trash",
-                    on_click=State.delete_chat,
+                    on_click=State.delete_chat,  # pyright: ignore
                     stroke_width=1,
                 ),
                 width="20%",
@@ -69,14 +88,11 @@ def modal(trigger) -> rx.Component:
             rx.hstack(
                 rx.input(
                     placeholder="Type something...",
-                    on_blur=State.set_new_chat_name,
+                    on_blur=State.set_new_chat_name,  # pyright: ignore
                     width=["15em", "20em", "30em", "30em", "30em", "30em"],
                 ),
                 rx.dialog.close(
-                    rx.button(
-                        "Create chat",
-                        on_click=State.create_chat,
-                    ),
+                    rx.button("Create chat", on_click=State.create_chat),  # pyright: ignore
                 ),
                 background_color=rx.color("mauve", 1),
                 spacing="2",
@@ -91,38 +107,14 @@ def navbar():
         rx.hstack(
             rx.hstack(
                 rx.avatar(fallback="RC", variant="solid"),
-                rx.heading("Reflex Chat"),
-                rx.desktop_only(
-                    rx.badge(
-                        State.current_chat,
-                        rx.tooltip(
-                            rx.icon("info", size=14), content="The current selected chat."
-                        ),
-                        variant="soft",
-                    )
-                ),
+                rx.heading("StackAI Chat"),
+                rx.desktop_only(CHAT_BADGE),
                 align_items="center",
             ),
             rx.hstack(
                 modal(rx.button("+ New chat")),
-                sidebar(
-                    rx.button(
-                        rx.icon(
-                            tag="messages-square",
-                            color=rx.color("mauve", 12),
-                        ),
-                        background_color=rx.color("mauve", 6),
-                    )
-                ),
-                rx.desktop_only(
-                    rx.button(
-                        rx.icon(
-                            tag="sliders-horizontal",
-                            color=rx.color("mauve", 12),
-                        ),
-                        background_color=rx.color("mauve", 6),
-                    )
-                ),
+                sidebar(get_button("messages-square")),
+                rx.desktop_only(get_button("sliders-horizontal")),
                 align_items="center",
             ),
             justify_content="space-between",
