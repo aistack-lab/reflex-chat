@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 import reflex as rx
 import reflex_chakra as rc
 
-from chat.components import loading_icon
+from chat.components import loading_icon, menu
 from chat.state import QA, State
 
 
@@ -111,30 +111,67 @@ def message_exchange(qa: QA) -> rx.Component:
 
 def chat() -> rx.Component:
     """List all the messages in a single conversation."""
-    return rx.center(
-        rx.vstack(
-            rx.center(
-                rx.image(src="/logo.png", width="100px", height="auto"),
-                width="100%",
-            ),
+    # Calculate the sidebar width (increased by 25%)
+    sidebar_width = 275  # Original was 220px, increased by ~25%
+
+    return rx.box(
+        # Main layout container with sidebar and chat content
+        rx.hstack(
+            # Left sidebar menu with increased width
             rx.box(
-                rx.foreach(State.chats[State.current_chat], message_exchange),
-                width="100%",
+                # Scale the menu component by 25%
+                rx.box(
+                    menu.menus_v1(),
+                    transform="scale(1.25)",
+                    transform_origin="top left",
+                    width="80%",  # Reduced from 100% to avoid overflow
+                    height="auto",
+                    padding="0.5em",
+                ),
+                position="fixed",
+                left="0",
+                top="60px",
+                bottom="60px",
+                padding="1em",
+                width=f"{sidebar_width}px",
+                border_right=f"1px solid {rx.color('mauve', 3)}",
+                background_color=rx.color("mauve", 2),
+                overflow="hidden",  # Changed from overflow_y="auto" to prevent scrollbar
+                z_index="10",
             ),
-            py="8",
-            flex="1",
+            # Original chat area adjusted for new sidebar width
+            rx.center(
+                rx.vstack(
+                    rx.center(
+                        rx.image(src="/logo.png", width="100px", height="auto"),
+                        width="100%",
+                    ),
+                    rx.box(
+                        rx.foreach(State.chats[State.current_chat], message_exchange),
+                        width="100%",
+                    ),
+                    py="8",
+                    flex="1",
+                    width="100%",
+                    max_width="50em",
+                    padding_x="4px",
+                    align_self="center",
+                    overflow="hidden",
+                    padding_bottom="5em",
+                ),
+                background_size="20px 20px",
+                background_image="radial-gradient(circle, hsl(0, 0%, 39%) 1px, transparent 1px)",  # noqa: E501
+                mask="radial-gradient(50% 100% at 50% 50%, hsl(0, 0%, 0%, 1), hsl(0, 0%, 0%, 0))",  # noqa: E501
+                width=f"calc(100% - {sidebar_width}px)",
+                height="100vh",
+                margin_left=f"{sidebar_width}px",
+            ),
+            spacing="0",
             width="100%",
-            max_width="50em",
-            padding_x="4px",
-            align_self="center",
-            overflow="hidden",
-            padding_bottom="5em",
         ),
-        background_size="20px 20px",
-        background_image="radial-gradient(circle, hsl(0, 0%, 39%) 1px, transparent 1px)",
-        mask="radial-gradient(50% 100% at 50% 50%, hsl(0, 0%, 0%, 1), hsl(0, 0%, 0%, 0))",
         width="100%",
         height="100vh",
+        overflow="hidden",
     )
 
 
