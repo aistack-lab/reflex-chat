@@ -105,10 +105,7 @@ def chat() -> rx.Component:
                         width="100%",
                     ),
                     rx.box(
-                        rx.foreach(
-                            State.chats[State.current_chat],  # Use direct mapping
-                            message_exchange,  # Render each message
-                        ),
+                        rx.foreach(State.chats[State.current_chat], message_exchange),
                         width="100%",
                         padding_bottom="80px",  # to prevent being hidden behind actionbar
                     ),
