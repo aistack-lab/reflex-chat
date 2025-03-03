@@ -105,6 +105,7 @@ def action_bar() -> rx.Component:
     """The action bar to send a new message."""
     return rx.center(
         rx.vstack(
+            rx.image(src="/logo.png", width="100px", height="auto"),
             rc.form(
                 input_form(),
                 on_submit=State.process_question,
