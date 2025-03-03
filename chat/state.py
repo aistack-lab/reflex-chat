@@ -38,20 +38,10 @@ class UIMessage(BaseModel):
     @classmethod
     def from_chat_message(cls, message: ChatMessage) -> UIMessage:
         """Convert a ChatMessage to a UIMessage."""
-        # Extract the content as string
-        if isinstance(message.content, str):
-            content = message.content
-        else:
-            # Handle BaseModel or other content types
-            try:
-                content = str(message.content)
-            except Exception:  # noqa: BLE001
-                content = "Content could not be displayed"
-
         return cls(
             id=message.message_id,
             role=message.role,
-            content=content,
+            content=str(message.content),
             model=message.model,
             timestamp=message.timestamp,
             cost_info=message.cost_info,
@@ -141,10 +131,7 @@ class State(rx.State):
         from llmling_agent import ChatMessage
 
         # Create a user message
-        user_message = UIMessage(
-            role="user",
-            content=question,
-        )
+        user_message = UIMessage(role="user", content=question)
         self.chats[self.current_chat].append(user_message)
 
         # Create an empty assistant message
