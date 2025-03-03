@@ -2,17 +2,13 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import reflex as rx
 import reflex_chakra as rc
 
 from chat.components import loading_icon, menu
-from chat.state import QA, State
-
-
-if TYPE_CHECKING:
-    from llmling_agent import ChatMessage
+from chat.state import State, UIMessage
 
 
 message_style: dict[str, Any] = dict(
@@ -49,63 +45,27 @@ def input_form() -> rx.Component:
     )
 
 
-def message(message: ChatMessage):
-    """Display a chat message."""
-    return rx.box(
-        rx.badge(
-            message.role,
-            rx.tooltip(rx.icon("info", size=14), content="The current selected chat."),
-            variant="soft",
-        ),
-        rx.markdown(
-            message.content,
-            background_color=rx.color("mauve", 4),
-            color=rx.color("mauve", 12),
-            **message_style,
-        ),
-        text_align="right",
-        margin_top="1em",
-    )
-
-
-def message_exchange(qa: QA) -> rx.Component:
-    """A single question/answer message.
+def message_exchange(msg: UIMessage) -> rx.Component:
+    """Display a message based on its role.
 
     Args:
-        qa: The question/answer pair.
+        msg: The message to display
 
     Returns:
-        A component displaying the question/answer pair.
+        A component displaying the message
     """
+    # We use conditional rendering based on a pre-set field, not computed
     return rx.box(
-        rx.box(
-            rx.markdown(
-                qa.question,
-                background_color=rx.color("mauve", 4),
-                color=rx.color("mauve", 12),
-                **message_style,
-            ),
-            text_align="right",
-            margin_top="1em",
+        rx.badge(msg.role, variant="soft"),
+        rx.spacer(),
+        rx.markdown(
+            msg.content,
+            background_color=rx.color(rx.cond(msg.role == "user", "mauve", "accent"), 4),
+            color=rx.color(rx.cond(msg.role == "user", "mauve", "accent"), 12),
+            **message_style,
         ),
-        rx.box(
-            rx.badge(
-                "assistant",
-                rx.tooltip(
-                    rx.icon("info", size=14), content="The current selected chat."
-                ),
-                variant="soft",
-            ),
-            rx.spacer(),
-            rx.markdown(
-                qa.answer,
-                background_color=rx.color("accent", 4),
-                color=rx.color("accent", 12),
-                **message_style,
-            ),
-            text_align="left",
-            padding_top="1em",
-        ),
+        text_align=rx.cond(msg.role == "user", "right", "left"),
+        margin_top="1em",
         width="100%",
     )
 
@@ -145,7 +105,10 @@ def chat() -> rx.Component:
                         width="100%",
                     ),
                     rx.box(
-                        rx.foreach(State.chats[State.current_chat], message_exchange),
+                        rx.foreach(
+                            State.chats[State.current_chat],  # Use direct mapping
+                            message_exchange,  # Render each message
+                        ),
                         width="100%",
                         padding_bottom="80px",  # to prevent being hidden behind actionbar
                     ),

@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+from datetime import datetime  # noqa: TC003
 import os
-from typing import Any
+from typing import Any, Literal
+import uuid
 
-from llmling_agent import ChatMessage
+from llmling_agent import ChatMessage, ToolCallInfo  # noqa: TC002
+from llmling_agent.messaging.messages import TokenCost  # noqa: TC002
+from pydantic import BaseModel, Field
 import reflex as rx
 
 from chat.agents import pool
@@ -17,28 +21,60 @@ if not os.getenv("OPENAI_API_KEY"):
     raise Exception(msg)  # noqa: TRY002
 
 
-class QA(rx.Base):
-    """A question and answer pair."""
+class UIMessage(BaseModel):
+    """A serializable message for the UI with pre-formatted display fields."""
 
-    question: str
-    answer: str
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    role: Literal["user", "assistant", "system", "tool"]
+    content: str
+    model: str | None = None
+    timestamp: datetime | None = None
+    cost_info: TokenCost | None = None
+    response_time: float | None = None
+    tool_calls: list[ToolCallInfo] = Field(default_factory=list)
+    name: str | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+    @classmethod
+    def from_chat_message(cls, message: ChatMessage) -> UIMessage:
+        """Convert a ChatMessage to a UIMessage."""
+        # Extract the content as string
+        if isinstance(message.content, str):
+            content = message.content
+        else:
+            # Handle BaseModel or other content types
+            try:
+                content = str(message.content)
+            except Exception:  # noqa: BLE001
+                content = "Content could not be displayed"
+
+        return cls(
+            id=message.message_id,
+            role=message.role,
+            content=content,
+            model=message.model,
+            timestamp=message.timestamp,
+            cost_info=message.cost_info,
+            response_time=message.response_time,
+            tool_calls=message.tool_calls,
+            name=message.name,
+            metadata=message.metadata,
+        )
 
 
-DEFAULT_CHATS: dict[str, list[Any]] = {"Intros": []}
+DEFAULT_CHATS: dict[str, list[UIMessage]] = {"Intros": []}
 
 
 class State(rx.State):
     """The app state."""
 
-    chats: dict[str, list[QA]] = DEFAULT_CHATS  # chat name -> questions / answers.
-    current_chat = "Intros"  # The current chat name.
-    question: str  # The current question.
-    processing: bool = False  # Whether we are processing the question.
-    new_chat_name: str = ""  # The name of the new chat.
+    chats: dict[str, list[UIMessage]] = DEFAULT_CHATS
+    current_chat = "Intros"
+    processing: bool = False
+    new_chat_name: str = ""
 
     def create_chat(self):
         """Create a new chat."""
-        # Add the new chat to the list of chats.
         self.current_chat = self.new_chat_name
         self.chats[self.new_chat_name] = []
 
@@ -66,9 +102,32 @@ class State(rx.State):
         """
         return list(self.chats.keys())
 
+    def format_chat_history(self) -> list:
+        """Format the chat history into pairs of [user_content, assistant_content]."""
+        result = []
+
+        messages = self.chats[self.current_chat]
+        for i in range(0, len(messages), 2):
+            if i + 1 < len(messages):
+                # Regular case: we have both user and assistant messages
+                user_content = messages[i].content
+                assistant_content = messages[i + 1].content
+                result.append([user_content, assistant_content])
+            else:
+                # Edge case: only user message exists
+                user_content = messages[i].content
+                result.append([user_content, ""])
+
+        return result
+
     async def process_question(self, form_data: dict[str, Any]):
-        question = form_data["question"]  # Get the question from the form
-        if question == "":  # Check if the question is empty
+        """Process a question from the form.
+
+        Args:
+            form_data: Form data containing the question.
+        """
+        question = form_data["question"]
+        if question == "":
             return
         async for value in self.openai_process_question(question):
             yield value
@@ -79,29 +138,46 @@ class State(rx.State):
         Args:
             question: The current question.
         """
-        # Add the question to the list of questions.
-        qa = QA(question=question, answer="")
-        self.chats[self.current_chat].append(qa)
+        from llmling_agent import ChatMessage
 
-        # Clear the input and start the processing.
+        # Create a user message
+        user_message = UIMessage(
+            role="user",
+            content=question,
+        )
+        self.chats[self.current_chat].append(user_message)
+
+        # Create an empty assistant message
+        assistant_message = UIMessage(role="assistant", content="")
+        self.chats[self.current_chat].append(assistant_message)
+
+        # Start processing
         self.processing = True
         yield
 
-        # Build the messages.
-        messages: list[ChatMessage] = []
-        for qa in self.chats[self.current_chat]:
-            messages.append(ChatMessage(qa.question, role="user"))
-            messages.append(ChatMessage(qa.answer, role="assistant"))
+        # Build chat history
+        messages = []
+        for msg in self.chats[self.current_chat][:-1]:  # Exclude empty assistant message
+            chat_message = ChatMessage(content=msg.content, role=msg.role)
+            messages.append(chat_message)
 
-        # Remove the last mock answer.
-        messages = messages[:-1]
+        # Process with agent
         agent = pool.get_agent("simple_agent")
         async with agent.run_stream(question) as stream:
-            # Stream the results, yielding after every word.
+            # Stream the results
             async for chunk in stream.stream():
-                self.chats[self.current_chat][-1].answer = chunk
-                self.chats = self.chats
+                # Update assistant message
+                assistant_msg_idx = len(self.chats[self.current_chat]) - 1
+                self.chats[self.current_chat][assistant_msg_idx].content = chunk
                 yield
+        # Update with final result and metadata
+        result = agent.conversation.chat_messages[-1]
+        if result:
+            # Convert the full ChatMessage result to our UIMessage format
+            ui_message = UIMessage.from_chat_message(result)
+            # Update our assistant message with all the metadata
+            assistant_msg_idx = len(self.chats[self.current_chat]) - 1
+            self.chats[self.current_chat][assistant_msg_idx] = ui_message
 
-            # Toggle the processing flag.
-            self.processing = False
+        # End processing
+        self.processing = False
