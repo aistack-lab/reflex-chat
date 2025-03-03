@@ -171,13 +171,11 @@ class State(rx.State):
                 self.chats[self.current_chat][assistant_msg_idx].content = chunk
                 yield
         # Update with final result and metadata
-        result = agent.conversation.chat_messages[-1]
-        if result:
+        if result := agent.conversation.chat_messages[-1]:
             # Convert the full ChatMessage result to our UIMessage format
             ui_message = UIMessage.from_chat_message(result)
             # Update our assistant message with all the metadata
             assistant_msg_idx = len(self.chats[self.current_chat]) - 1
             self.chats[self.current_chat][assistant_msg_idx] = ui_message
 
-        # End processing
         self.processing = False
