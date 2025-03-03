@@ -5,17 +5,16 @@ from __future__ import annotations
 import os
 from typing import Any
 
-from llmling_agent import AgentPool, ChatMessage
+from llmling_agent import ChatMessage
 import reflex as rx
+
+from chat.agents import pool
 
 
 # Checking if the API key is set properly
 if not os.getenv("OPENAI_API_KEY"):
     msg = "Please set OPENAI_API_KEY environment variable."
     raise Exception(msg)  # noqa: TRY002
-
-
-pool = AgentPool[None]("chat/agents.yml")
 
 
 class QA(rx.Base):
