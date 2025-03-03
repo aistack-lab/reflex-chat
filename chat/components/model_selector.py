@@ -142,7 +142,7 @@ def model_selector(
                 rx.select(
                     ModelSelectorState.available_providers,
                     value=ModelSelectorState.selected_provider,
-                    on_change=ModelSelectorState.on_provider_change,
+                    on_change=ModelSelectorState.on_provider_change,  # pyright: ignore
                     placeholder="Select provider",
                 ),
                 mb="4",
@@ -156,7 +156,7 @@ def model_selector(
                 rx.select(
                     ModelSelectorState.model_names,
                     value=ModelSelectorState.selected_model_name,
-                    on_change=ModelSelectorState.on_model_change,
+                    on_change=ModelSelectorState.on_model_change,  # pyright: ignore
                     placeholder="Select model",
                 ),
                 mb="4",
@@ -177,7 +177,7 @@ def model_selector(
                         ),
                         variant="ghost",
                         size="sm",
-                        on_click=ModelSelectorState.toggle_expanded,
+                        on_click=ModelSelectorState.toggle_expanded,  # pyright: ignore
                     ),
                     width="100%",
                 ),

@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import reflex as rx
 import reflex_chakra as rc
 
 from chat.components import loading_icon
 from chat.state import QA, State
+
+
+if TYPE_CHECKING:
+    from llmling_agent import ChatMessage
 
 
 message_style: dict[str, Any] = dict(
@@ -45,7 +49,25 @@ def input_form() -> rx.Component:
     )
 
 
-def message(qa: QA) -> rx.Component:
+def message(message: ChatMessage):
+    rx.box(
+        rx.badge(
+            message.role,
+            rx.tooltip(rx.icon("info", size=14), content="The current selected chat."),
+            variant="soft",
+        ),
+        rx.markdown(
+            message.content,
+            background_color=rx.color("mauve", 4),
+            color=rx.color("mauve", 12),
+            **message_style,
+        ),
+        text_align="right",
+        margin_top="1em",
+    )
+
+
+def message_exchange(qa: QA) -> rx.Component:
     """A single question/answer message.
 
     Args:
@@ -66,6 +88,14 @@ def message(qa: QA) -> rx.Component:
             margin_top="1em",
         ),
         rx.box(
+            rx.badge(
+                "assistant",
+                rx.tooltip(
+                    rx.icon("info", size=14), content="The current selected chat."
+                ),
+                variant="soft",
+            ),
+            rx.spacer(),
             rx.markdown(
                 qa.answer,
                 background_color=rx.color("accent", 4),
@@ -83,7 +113,10 @@ def chat() -> rx.Component:
     """List all the messages in a single conversation."""
     return rx.center(
         rx.vstack(
-            rx.box(rx.foreach(State.chats[State.current_chat], message), width="100%"),
+            rx.box(
+                rx.foreach(State.chats[State.current_chat], message_exchange),
+                width="100%",
+            ),
             py="8",
             flex="1",
             width="100%",
