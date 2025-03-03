@@ -50,7 +50,8 @@ def input_form() -> rx.Component:
 
 
 def message(message: ChatMessage):
-    rx.box(
+    """Display a chat message."""
+    return rx.box(
         rx.badge(
             message.role,
             rx.tooltip(rx.icon("info", size=14), content="The current selected chat."),
@@ -115,7 +116,7 @@ def chat() -> rx.Component:
 
     return rx.box(
         rx.hstack(
-            # Left sidebar menu (unchanged)
+            # Left sidebar menu
             rx.box(
                 rx.box(
                     menu.menus_v1(),
@@ -136,8 +137,8 @@ def chat() -> rx.Component:
                 overflow="hidden",
                 z_index="10",
             ),
-            # Only change: add overflow_y="auto" to the center container
-            rx.center(
+            # Chat content area with scrolling
+            rx.box(
                 rx.vstack(
                     rx.center(
                         rx.image(src="/logo.png", width="100px", height="auto"),
@@ -146,31 +147,30 @@ def chat() -> rx.Component:
                     rx.box(
                         rx.foreach(State.chats[State.current_chat], message_exchange),
                         width="100%",
+                        padding_bottom="80px",  # to prevent being hidden behind actionbar
                     ),
-                    py="8",
-                    flex="1",
                     width="100%",
                     max_width="50em",
                     padding_x="4px",
                     align_self="center",
-                    overflow="hidden",
-                    padding_bottom="5em",
+                    margin_x="auto",
+                    spacing="4",
                 ),
                 background_size="20px 20px",
                 background_image="radial-gradient(circle, hsl(0, 0%, 39%) 1px, transparent 1px)",  # noqa: E501
                 mask="radial-gradient(50% 100% at 50% 50%, hsl(0, 0%, 0%, 1), hsl(0, 0%, 0%, 0))",  # noqa: E501
                 width=f"calc(100% - {sidebar_width}px)",
-                height="100vh",
+                height="calc(100vh - 60px)",  # Subtract navbar height
                 margin_left=f"{sidebar_width}px",
-                # This is the only change:
-                overflow_y="auto",
+                overflow_y="auto",  # Enable vertical scrolling
+                padding_y="8",
             ),
             spacing="0",
             width="100%",
+            height="calc(100vh - 60px)",  # Adjusted for navbar height
         ),
         width="100%",
-        height="100vh",
-        overflow="hidden",
+        position="relative",
     )
 
 
@@ -185,9 +185,10 @@ def action_bar() -> rx.Component:
             ),
             align_items="center",
         ),
-        position="sticky",
+        position="fixed",  # Changed from sticky to fixed for consistent positioning
         bottom="0",
         left="0",
+        right="0",
         padding_y="16px",
         backdrop_filter="auto",
         backdrop_blur="lg",
@@ -195,4 +196,5 @@ def action_bar() -> rx.Component:
         background_color=rx.color("mauve", 2),
         align_items="stretch",
         width="100%",
+        z_index="99",  # Ensure action bar stays on top
     )
