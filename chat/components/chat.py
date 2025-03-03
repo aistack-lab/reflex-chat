@@ -20,7 +20,29 @@ message_style: dict[str, Any] = dict(
 
 INPUT_MSG = "Enter a question to get a response."
 
-tooltip = rx.tooltip(rx.icon("info", size=18), content=INPUT_MSG)
+
+def input_form() -> rx.Component:
+    """A form for entering a question."""
+    return rc.form_control(
+        rx.hstack(
+            rx.input(
+                rx.input.slot(rx.tooltip(rx.icon("info", size=18), content=INPUT_MSG)),
+                placeholder="Stelle eine Frage...",
+                id="question",
+                width=["15em", "20em", "45em", "50em", "50em", "50em"],
+            ),
+            rx.button(
+                rx.cond(
+                    State.processing,
+                    loading_icon(height="1em"),
+                    rx.text("Send"),
+                ),
+                type="submit",
+            ),
+            align_items="center",
+        ),
+        is_disabled=State.processing,
+    )
 
 
 def message(qa: QA) -> rx.Component:
@@ -59,16 +81,23 @@ def message(qa: QA) -> rx.Component:
 
 def chat() -> rx.Component:
     """List all the messages in a single conversation."""
-    return rx.vstack(
-        rx.box(rx.foreach(State.chats[State.current_chat], message), width="100%"),
-        py="8",
-        flex="1",
+    return rx.center(
+        rx.vstack(
+            rx.box(rx.foreach(State.chats[State.current_chat], message), width="100%"),
+            py="8",
+            flex="1",
+            width="100%",
+            max_width="50em",
+            padding_x="4px",
+            align_self="center",
+            overflow="hidden",
+            padding_bottom="5em",
+        ),
+        background_size="20px 20px",
+        background_image="radial-gradient(circle, hsl(0, 0%, 39%) 1px, transparent 1px)",
+        mask="radial-gradient(50% 100% at 50% 50%, hsl(0, 0%, 0%, 1), hsl(0, 0%, 0%, 0))",
         width="100%",
-        max_width="50em",
-        padding_x="4px",
-        align_self="center",
-        overflow="hidden",
-        padding_bottom="5em",
+        height="100vh",
     )
 
 
@@ -77,26 +106,7 @@ def action_bar() -> rx.Component:
     return rx.center(
         rx.vstack(
             rc.form(
-                rc.form_control(
-                    rx.hstack(
-                        rx.input(
-                            rx.input.slot(tooltip),
-                            placeholder="Type something...",
-                            id="question",
-                            width=["15em", "20em", "45em", "50em", "50em", "50em"],
-                        ),
-                        rx.button(
-                            rx.cond(
-                                State.processing,
-                                loading_icon(height="1em"),
-                                rx.text("Send"),
-                            ),
-                            type="submit",
-                        ),
-                        align_items="center",
-                    ),
-                    is_disabled=State.processing,
-                ),
+                input_form(),
                 on_submit=State.process_question,
                 reset_on_submit=True,
             ),

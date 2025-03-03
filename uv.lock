@@ -1944,6 +1944,18 @@ wheels = [
 ]
 
 [[package]]
+name = "reflex-audio-capture"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "reflex" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ea/4a/fabfbff62befa46db76b71fe69fd1aab4779f49a229c11255d37b913b444/reflex_audio_capture-0.1.0.tar.gz", hash = "sha256:d1bd11910c4eb73557a75a13da56249e9a713e610e8152c65ea8d0347887948e", size = 9542 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a2/8b/0277d39e95c4d5e56fd4283e9e432f38b296efe2ad3130e315742cb952c8/reflex_audio_capture-0.1.0-py3-none-any.whl", hash = "sha256:b3265be0292f170540565201f364b88f4eaa5c7810e6afae52f46400da9fd6df", size = 4665 },
+]
+
+[[package]]
 name = "reflex-chakra"
 version = "0.6.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1964,6 +1976,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "reflex" },
     { name = "reflex-antd" },
+    { name = "reflex-audio-capture" },
     { name = "reflex-chakra" },
     { name = "reflex-icon-library" },
     { name = "reflex-local-auth" },
@@ -1976,6 +1989,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.11a2" },
     { name = "reflex", specifier = ">=0.7.0" },
     { name = "reflex-antd" },
+    { name = "reflex-audio-capture" },
     { name = "reflex-chakra", specifier = ">=0.6.0" },
     { name = "reflex-icon-library" },
     { name = "reflex-local-auth" },

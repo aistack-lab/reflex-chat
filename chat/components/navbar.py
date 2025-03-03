@@ -34,16 +34,12 @@ def sidebar_chat(chat: str) -> rx.Component:
         rx.hstack(
             rx.button(
                 chat,
-                on_click=State.set_chat,  # pyright: ignore
+                on_click=lambda: State.set_chat(chat),  # type: ignore
                 width="80%",
                 variant="surface",
-            ),
+            ),  # pyright: ignore
             rx.button(
-                rx.icon(
-                    tag="trash",
-                    on_click=State.delete_chat,  # pyright: ignore
-                    stroke_width=1,
-                ),
+                rx.icon(tag="trash", on_click=State.delete_chat, stroke_width=1),  # type: ignore
                 width="20%",
                 variant="surface",
                 color_scheme="red",
