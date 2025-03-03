@@ -113,6 +113,10 @@ def chat() -> rx.Component:
     """List all the messages in a single conversation."""
     return rx.center(
         rx.vstack(
+            rx.center(
+                rx.image(src="/logo.png", width="100px", height="auto"),
+                width="100%",
+            ),
             rx.box(
                 rx.foreach(State.chats[State.current_chat], message_exchange),
                 width="100%",
@@ -138,7 +142,6 @@ def action_bar() -> rx.Component:
     """The action bar to send a new message."""
     return rx.center(
         rx.vstack(
-            rx.image(src="/logo.png", width="100px", height="auto"),
             rc.form(
                 input_form(),
                 on_submit=State.process_question,
