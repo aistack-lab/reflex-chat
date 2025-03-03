@@ -111,20 +111,17 @@ def message_exchange(qa: QA) -> rx.Component:
 
 def chat() -> rx.Component:
     """List all the messages in a single conversation."""
-    # Calculate the sidebar width (increased by 25%)
-    sidebar_width = 275  # Original was 220px, increased by ~25%
+    sidebar_width = 275
 
     return rx.box(
-        # Main layout container with sidebar and chat content
         rx.hstack(
-            # Left sidebar menu with increased width
+            # Left sidebar menu (unchanged)
             rx.box(
-                # Scale the menu component by 25%
                 rx.box(
                     menu.menus_v1(),
                     transform="scale(1.25)",
                     transform_origin="top left",
-                    width="80%",  # Reduced from 100% to avoid overflow
+                    width="80%",
                     height="auto",
                     padding="0.5em",
                 ),
@@ -136,10 +133,10 @@ def chat() -> rx.Component:
                 width=f"{sidebar_width}px",
                 border_right=f"1px solid {rx.color('mauve', 3)}",
                 background_color=rx.color("mauve", 2),
-                overflow="hidden",  # Changed from overflow_y="auto" to prevent scrollbar
+                overflow="hidden",
                 z_index="10",
             ),
-            # Original chat area adjusted for new sidebar width
+            # Only change: add overflow_y="auto" to the center container
             rx.center(
                 rx.vstack(
                     rx.center(
@@ -165,6 +162,8 @@ def chat() -> rx.Component:
                 width=f"calc(100% - {sidebar_width}px)",
                 height="100vh",
                 margin_left=f"{sidebar_width}px",
+                # This is the only change:
+                overflow_y="auto",
             ),
             spacing="0",
             width="100%",
