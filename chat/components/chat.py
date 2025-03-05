@@ -48,6 +48,39 @@ def input_form() -> rx.Component:
     )
 
 
+def tool_call_component(tool_call: Any) -> rx.Component:
+    """Render a tool call as a component."""
+    return rx.vstack(
+        rx.hstack(
+            rx.icon("pen_tool", color=rx.color("cyan", 11)),
+            rx.text(f"Tool: {tool_call.tool_name}", weight="bold"),
+            spacing="1",
+        ),
+        rx.code_block(
+            str(tool_call.args),
+            language="json",
+            theme="dark",
+            copy_button=True,
+            border_radius="md",
+        ),
+        rx.divider(),
+        rx.text("Result:"),
+        rx.code_block(
+            # Use string representation directly to avoid conditional evaluation
+            str(tool_call.result),
+            language="json",
+            theme="dark",
+            copy_button=True,
+            border_radius="md",
+        ),
+        padding="0.5em",
+        border=f"1px solid {rx.color('cyan', 6)}",
+        border_radius="md",
+        width="100%",
+        background_color=rx.color("cyan", 2),
+    )
+
+
 def message_exchange(msg: UIMessage) -> rx.Component:
     """Display a message based on its role.
 
