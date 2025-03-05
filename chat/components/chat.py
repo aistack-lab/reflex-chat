@@ -29,6 +29,8 @@ def input_form() -> rx.Component:
                 rx.input.slot(rx.tooltip(rx.icon("info", size=18), content=INPUT_MSG)),
                 placeholder="Stelle eine Frage...",
                 id="question",
+                value=State.input_question,
+                on_change=State.set_input_question,
                 width=["15em", "20em", "45em", "50em", "50em", "50em"],
             ),
             rx.button(
@@ -145,7 +147,7 @@ def action_bar() -> rx.Component:
             ),
             align_items="center",
         ),
-        position="fixed",  # Changed from sticky to fixed for consistent positioning
+        position="fixed",
         bottom="0",
         left="0",
         right="0",
