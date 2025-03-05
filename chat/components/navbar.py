@@ -102,8 +102,8 @@ def navbar():
     return rx.box(
         rx.hstack(
             rx.hstack(
-                rx.avatar(fallback="RC", variant="solid"),
-                rx.heading("StackAI Chat"),
+                # rx.avatar(fallback="RC", variant="solid"),
+                rx.heading("AIStack Chat"),
                 rx.desktop_only(CHAT_BADGE),
                 align_items="center",
             ),
