@@ -1668,6 +1668,18 @@ wheels = [
 ]
 
 [[package]]
+name = "pyconify"
+version = "0.2.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/fd/7f/94d424dc756a6287271cf40cf1b2a44c10e3f137bf3246a2b4a7416ca3d3/pyconify-0.2.1.tar.gz", hash = "sha256:8dd53757d9fbed41711434460932b2b5dbc25da720cd9f9a44af0187b2dfc07d", size = 22478 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/72/40/50dd2e8bfec81676e4619903bd452c10dc0d8efac1533e79e67cc76759b5/pyconify-0.2.1-py3-none-any.whl", hash = "sha256:d3b53eee1f8a2d60c1d135610f42e789774dbe71c6d8af68af0a21d3b3ec9eb7", size = 19459 },
+]
+
+[[package]]
 name = "pycparser"
 version = "2.22"
 source = { registry = "https://pypi.org/simple" }
@@ -2107,6 +2119,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "jira" },
     { name = "llmling-agent", extra = ["default"] },
+    { name = "pyconify" },
     { name = "pydantic" },
     { name = "reflex" },
     { name = "reflex-ai" },
@@ -2122,6 +2135,7 @@ dependencies = [
 requires-dist = [
     { name = "jira" },
     { name = "llmling-agent", extras = ["default"], specifier = ">=0.99.17" },
+    { name = "pyconify", specifier = ">=0.2.1" },
     { name = "pydantic", specifier = ">=2.11a2" },
     { name = "reflex", specifier = ">=0.7.0" },
     { name = "reflex-ai" },
