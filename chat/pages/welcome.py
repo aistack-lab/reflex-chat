@@ -42,7 +42,8 @@ def welcome() -> rx.Component:
             ),
             rc.center(
                 rx.link(
-                    rx.button("Start Chat", size="lg", color_scheme="cyan"),
+                    # Updated size to '3' which is equivalent to 'lg'
+                    rx.button("Start Chat", size="3", color_scheme="cyan"),
                     href="/chat",
                 ),
                 padding_top="2em",
