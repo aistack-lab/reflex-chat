@@ -7,8 +7,7 @@ from typing import Any
 import reflex as rx
 import reflex_chakra as rc
 
-from chat.components import loading_icon, menu
-from chat.components.templates import templates
+from chat.components import loading_icon
 from chat.state import State, UIMessage
 
 
@@ -108,66 +107,22 @@ def message_exchange(msg: UIMessage) -> rx.Component:
 
 def chat() -> rx.Component:
     """List all the messages in a single conversation."""
-    sidebar_width = 275
-
-    return rx.box(
-        rx.hstack(
-            # Left sidebar menu
-            rx.box(
-                rx.box(
-                    menu.menus_v1(),
-                    transform="scale(1.25)",
-                    transform_origin="top left",
-                    width="80%",
-                    height="auto",
-                    padding="0.5em",
-                ),
-                position="fixed",
-                left="0",
-                top="60px",
-                bottom="60px",
-                padding="1em",
-                width=f"{sidebar_width}px",
-                border_right=f"1px solid {rx.color('mauve', 3)}",
-                background_color=rx.color("mauve", 2),
-                overflow="hidden",
-                z_index="10",
-            ),
-            # Chat content area with scrolling
-            rx.box(
-                rx.vstack(
-                    rx.center(
-                        rx.image(src="/logo.png", width="100px", height="auto"),
-                        width="100%",
-                    ),
-                    templates(),
-                    rx.box(
-                        rx.foreach(State.chats[State.current_chat], message_exchange),
-                        width="100%",
-                        padding_bottom="80px",  # to prevent being hidden behind actionbar
-                    ),
-                    width="100%",
-                    max_width="50em",
-                    padding_x="4px",
-                    align_self="center",
-                    margin_x="auto",
-                    spacing="4",
-                ),
-                background_size="20px 20px",
-                background_image="radial-gradient(circle, hsl(0, 0%, 39%) 1px, transparent 1px)",  # noqa: E501
-                mask="radial-gradient(50% 100% at 50% 50%, hsl(0, 0%, 0%, 1), hsl(0, 0%, 0%, 0))",  # noqa: E501
-                width=f"calc(100% - {sidebar_width}px)",
-                height="calc(100vh - 60px)",  # Subtract navbar height
-                margin_left=f"{sidebar_width}px",
-                overflow_y="auto",  # Enable vertical scrolling
-                padding_y="8",
-            ),
-            spacing="0",
+    return rx.vstack(
+        rx.center(
+            rx.image(src="/logo.png", width="100px", height="auto"),
             width="100%",
-            height="calc(100vh - 60px)",  # Adjusted for navbar height
+        ),
+        rx.box(
+            rx.foreach(State.chats[State.current_chat], message_exchange),
+            width="100%",
+            padding_bottom="80px",  # to prevent being hidden behind actionbar
         ),
         width="100%",
-        position="relative",
+        max_width="50em",
+        padding_x="4px",
+        align_self="center",
+        margin_x="auto",
+        spacing="4",
     )
 
 
