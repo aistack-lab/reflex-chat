@@ -20,10 +20,6 @@ def template_card(icon: str, title: str, description: str, color: str) -> rx.Com
 
 def templates() -> rx.Component:
     return rx.box(
-        # rx.image(
-        #     src="/reflex_x_llamaindex.svg",
-        #     class_name="opacity-70 w-auto h-11 pointer-events-none",
-        # ),
         rx.box(
             template_card(
                 "message-circle",
@@ -56,5 +52,6 @@ def templates() -> rx.Component:
             "animation": "reveal 0.35s ease-out",
             "@keyframes reveal": {"0%": {"opacity": "0"}, "100%": {"opacity": "1"}},
         },
-        # display=rx.cond(State.chats, "none", "flex"),
+        # Use a computed var or another approach to conditionally display
+        display="flex",
     )
