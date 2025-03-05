@@ -8,6 +8,7 @@ import reflex as rx
 import reflex_chakra as rc
 
 from chat.components import loading_icon, menu
+from chat.components.templates import templates
 from chat.state import State, UIMessage
 
 
@@ -106,6 +107,7 @@ def chat() -> rx.Component:
                         rx.image(src="/logo.png", width="100px", height="auto"),
                         width="100%",
                     ),
+                    templates(),
                     rx.box(
                         rx.foreach(State.chats[State.current_chat], message_exchange),
                         width="100%",
