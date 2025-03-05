@@ -1,6 +1,12 @@
 from __future__ import annotations
 
+import reflex as rx
+import reflex_chakra as rc
 
+from chat.components import navbar
+
+
+# Import the welcome text
 INTRO = """
 # "🤖 Demo-Tool
 
@@ -17,3 +23,35 @@ weitere Fragen klären
 
 Klicken Sie auf 'Start', um zu beginnen.
 """
+
+
+@rx.page(route="/")
+def welcome() -> rx.Component:
+    """Welcome page showing introductory content."""
+    return rc.vstack(
+        navbar(),
+        rc.container(
+            rc.box(
+                rx.markdown(INTRO),
+                padding="2em",
+                background_color=rx.color("mauve", 2),
+                border_radius="md",
+                max_width="800px",
+                margin="0 auto",
+                box_shadow="lg",
+            ),
+            rc.center(
+                rx.link(
+                    rx.button("Start Chat", size="lg", color_scheme="cyan"),
+                    href="/chat",
+                ),
+                padding_top="2em",
+            ),
+            padding="2em",
+        ),
+        background_color=rx.color("mauve", 1),
+        color=rx.color("mauve", 12),
+        min_height="100vh",
+        align_items="stretch",
+        spacing="0",
+    )
