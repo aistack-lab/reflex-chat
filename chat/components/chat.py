@@ -109,9 +109,7 @@ def chat() -> rx.Component:
                     ),
                     templates(),
                     rx.box(
-                        rx.foreach(
-                            State.chats[State.current_chat_name], message_exchange
-                        ),
+                        rx.foreach(State.chats[State.current_chat], message_exchange),
                         width="100%",
                         padding_bottom="80px",  # to prevent being hidden behind actionbar
                     ),

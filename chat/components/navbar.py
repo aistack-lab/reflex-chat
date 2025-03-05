@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 MAUVE = rx.color("mauve", 12)
 CHAT_BADGE = rx.badge(
-    State.current_chat_name,
+    State.current_chat,
     rx.tooltip(rx.icon("info", size=14), content="The current selected chat."),
     variant="soft",
 )
