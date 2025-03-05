@@ -5,24 +5,9 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 
 import reflex as rx
-import reflex_chakra as rc
 
 from chat.agents import pool
-from chat.components import chat, navbar
-
-
-def index() -> rx.Component:
-    """The main app."""
-    return rc.vstack(
-        navbar(),
-        chat.chat(),
-        chat.action_bar(),
-        background_color=rx.color("mauve", 1),
-        color=rx.color("mauve", 12),
-        min_height="100vh",
-        align_items="stretch",
-        spacing="0",
-    )
+from chat.pages import chat_page, welcome
 
 
 # Add state and page to the app.
@@ -37,4 +22,7 @@ async def run_pool():
 
 
 app.register_lifespan_task(run_pool)
-app.add_page(index)
+
+# Register the pages
+app.add_page(welcome)
+app.add_page(chat_page)

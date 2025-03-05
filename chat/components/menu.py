@@ -5,8 +5,8 @@ import reflex as rx
 
 class Content(rx.State):
     links: list[dict[str, str]] = [  # noqa: RUF012
-        {"label": "Anleitung", "link": "#usage", "color": "gray"},
-        {"label": "Chat", "link": "#chat", "color": "gray"},
+        {"label": "Home", "link": "/", "color": "gray"},
+        {"label": "Chat", "link": "/chat", "color": "gray"},
         {"label": "FAQ", "link": "#faq", "color": "gray"},
     ]
 
