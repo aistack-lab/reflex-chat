@@ -62,6 +62,7 @@ class State(rx.State):
     current_chat = "Intros"
     processing: bool = False
     new_chat_name: str = ""
+    input_question: str = ""
 
     def create_chat(self):
         """Create a new chat."""
@@ -82,6 +83,14 @@ class State(rx.State):
             chat_name: The name of the chat.
         """
         self.current_chat = chat_name
+
+    def set_input_question(self, value: str) -> None:
+        """Update the current input question.
+
+        Args:
+            value: The new input question value
+        """
+        self.input_question = value
 
     @rx.var(cache=True)
     def chat_titles(self) -> list[str]:
@@ -119,6 +128,7 @@ class State(rx.State):
         question = form_data["question"]
         if question == "":
             return
+        self.input_question = ""
         async for value in self.openai_process_question(question):
             yield value
 
