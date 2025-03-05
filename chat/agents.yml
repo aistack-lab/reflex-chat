@@ -5,8 +5,8 @@ agents:
       type: pydantic_ai
       model: openai:gpt-4o-mini
     tools:
-      - type: import
-        import_path: webbrowser.open
-        description: "Open URL in browser"
+      - "webbrowser.open"
+      - "llmling_agent_tools.jira_tool.jira_tools.create_issue"
+      - "llmling_agent_tools.jira_tool.jira_tools.search_for_issues"
     system_prompts:
       - "You are a helpful assistant."
