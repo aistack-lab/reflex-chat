@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import reflex as rx
 import reflex_chakra as rc
 
 from chat.components import loading_icon
 from chat.state import State, UIMessage
+
+
+if TYPE_CHECKING:
+    from llmling_agent import ToolCallInfo
 
 
 message_style: dict[str, Any] = dict(
@@ -47,7 +51,7 @@ def input_form() -> rx.Component:
     )
 
 
-def tool_call_component(tool_call: Any) -> rx.Component:
+def tool_call_component(tool_call: ToolCallInfo) -> rx.Component:
     """Render a tool call as a component."""
     return rx.vstack(
         rx.hstack(

@@ -140,30 +140,20 @@ class State(rx.State):
         """
         from llmling_agent import ChatMessage
 
-        # Create a user message
         user_message = UIMessage(role="user", content=question)
         self.chats[self.current_chat].append(user_message)
-
-        # Create an empty assistant message
         assistant_message = UIMessage(role="assistant", content="")
         self.chats[self.current_chat].append(assistant_message)
-
-        # Start processing
         self.processing = True
         yield
-
-        # Build chat history
         messages = []
         for msg in self.chats[self.current_chat][:-1]:  # Exclude empty assistant message
             chat_message = ChatMessage(content=msg.content, role=msg.role)
             messages.append(chat_message)
-
-        # Process with agent
         agent = pool.get_agent("simple_agent")
         async with agent.run_stream(question) as stream:
             # Stream the results
             async for chunk in stream.stream():
-                # Update assistant message
                 assistant_msg_idx = len(self.chats[self.current_chat]) - 1
                 self.chats[self.current_chat][assistant_msg_idx].content = chunk
                 yield
