@@ -19,10 +19,13 @@ T = TypeVar("T", bound=BaseModel)
 class FieldHandler:
     """Base handler for processing Pydantic model fields."""
 
-    def supports(self, field_info: pydantic.fields.FieldInfo) -> bool:
+    def supports(
+        self, type_annotation: Any, field_info: pydantic.fields.FieldInfo | None = None
+    ) -> bool:
         """Determine if this handler can process the given field.
 
         Args:
+            type_annotation: Type annotation of the field
             field_info: Pydantic field info object
 
         Returns:
@@ -69,7 +72,7 @@ class FieldHandlerRegistry:
 
     def __init__(self):
         """Initialize an empty registry."""
-        self._handlers = []
+        self._handlers: list[FieldHandler] = []
 
     def register(self, handler: FieldHandler) -> None:
         """Register a field handler."""
@@ -80,7 +83,14 @@ class FieldHandlerRegistry:
     ) -> FieldHandler | None:
         """Get the appropriate handler for a field."""
         for handler in self._handlers:
-            if handler.supports(field_info):
+            if handler.supports(field_info.annotation, field_info):
+                return handler
+        return None
+
+    def get_handler_for_type(self, type_annotation: Any) -> FieldHandler | None:
+        """Get the appropriate handler for a type annotation."""
+        for handler in self._handlers:
+            if handler.supports(type_annotation):
                 return handler
         return None
 
@@ -158,7 +168,6 @@ class PydanticFormState(rx.State):
             return False
 
         try:
-            # Use Pydantic validation
             self.model.__class__.model_validate(self.model.model_dump())
             self.errors = {}
         except pydantic.ValidationError as e:

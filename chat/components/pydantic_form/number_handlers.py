@@ -25,16 +25,11 @@ class IntHandler(FieldHandler):
         """
         self.step = step
 
-    def supports(self, field_info: pydantic.fields.FieldInfo) -> bool:
-        """Check if this handler supports the field (int only).
-
-        Args:
-            field_info: Pydantic field info
-
-        Returns:
-            True if this is an int field
-        """
-        return field_info.annotation is int
+    def supports(
+        self, type_annotation: Any, field_info: pydantic.fields.FieldInfo | None = None
+    ) -> bool:
+        """Check if this handler supports the field (int only)."""
+        return type_annotation is int
 
     def create_widget(
         self,
