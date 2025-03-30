@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "pydantic>=2.11a2",
+    "pydantic",
     "llmling-agent[default]>=0.99.17",
     "reflex>=0.7.0",
     "reflex-chakra>=0.6.0",
