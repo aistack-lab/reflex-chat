@@ -9,9 +9,9 @@ from chat.state import State
 
 if TYPE_CHECKING:
     from reflex.components.radix.themes.components.button import Button
+    from reflex.constants.colors import ColorType
 
 
-MAUVE = rx.color("mauve", 12)
 CHAT_BADGE = rx.badge(
     State.current_chat,
     rx.tooltip(rx.icon("info", size=14), content="The current selected chat."),
@@ -19,8 +19,8 @@ CHAT_BADGE = rx.badge(
 )
 
 
-def get_button(tag: str) -> Button:
-    icon = rx.icon(tag=tag, color=MAUVE)
+def get_button(tag: str, color: ColorType = "mauve") -> Button:
+    icon = rx.icon(tag=tag, color=rx.color(color, 12))
     return rx.button(icon, background_color=rx.color("mauve", 6))
 
 
