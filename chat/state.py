@@ -11,6 +11,7 @@ from llmling_agent import ChatMessage, ToolCallInfo  # noqa: TC002
 from llmling_agent.messaging.messages import TokenCost  # noqa: TC002
 from pydantic import BaseModel, Field
 import reflex as rx
+import reflexions as rfx
 
 from chat.agents import pool
 
@@ -84,13 +85,19 @@ class State(rx.State):
         """
         self.current_chat = chat_name
 
-    def set_input_question(self, value: str) -> None:
+    def set_input_question(self, value: str | rfx.CardItem) -> None:
         """Update the current input question.
 
         Args:
             value: The new input question value
         """
-        self.input_question = value
+        match value:
+            case rfx.CardItem():
+                self.input_question = value.description
+            case dict():
+                self.input_question = value.get("description", "")
+            case _:
+                self.input_question = value
 
     @rx.var(cache=True)
     def chat_titles(self) -> list[str]:

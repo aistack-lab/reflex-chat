@@ -2097,16 +2097,16 @@ wheels = [
 
 [[package]]
 name = "reflexions"
-version = "0.1.0"
+version = "0.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
     { name = "reflex" },
     { name = "reflex-chakra" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c9/0f/49234bde9429db13c097fe039613fbf5fadaceec569464eb3115a5b0323f/reflexions-0.1.0.tar.gz", hash = "sha256:b5dcc83f70d9f08b68492001a9765552570f971ba9d7b0f4b2dafd08402e697f", size = 18283 }
+sdist = { url = "https://files.pythonhosted.org/packages/1f/79/ae13bc3c3e47dd0d90594c72be9f1c81aaf3a3c9ef86caeccc832499f9b4/reflexions-0.1.1.tar.gz", hash = "sha256:ecba4c610e6df0fc483acbfb4d377921c5d47f63a141b3e3331551b41879f725", size = 18204 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c1/e3/cffea60af7e52384ea7bf489148fae09436ca234b7f1e82ab76aea37a208/reflexions-0.1.0-py3-none-any.whl", hash = "sha256:31df010ab0e59685f019c6ec2184163a8ba2acc1f29d3ac7ff5e809faef2e02b", size = 15746 },
+    { url = "https://files.pythonhosted.org/packages/f5/00/a28fe0fb2e40632bae49ea0e710bc72d88cde2a289208094294cee53f5e1/reflexions-0.1.1-py3-none-any.whl", hash = "sha256:535bb89effd9e4f8936de25b38af7e849b4a5013dbc54ac29170295824581065", size = 15641 },
 ]
 
 [[package]]

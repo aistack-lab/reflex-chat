@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, Any
 
 import reflex as rx
 import reflex_chakra as rc
+from reflexions import loading_icon
 
-from chat.components import loading_icon
 from chat.state import State, UIMessage
 
 
