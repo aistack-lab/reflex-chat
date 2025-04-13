@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from datetime import datetime  # noqa: TC003
-import os
 from typing import Any, Literal
 import uuid
 
@@ -14,12 +13,6 @@ import reflex as rx
 import reflexions as rfx
 
 from chat.agents import pool
-
-
-# Checking if the API key is set properly
-if not os.getenv("OPENAI_API_KEY"):
-    msg = "Please set OPENAI_API_KEY environment variable."
-    raise Exception(msg)  # noqa: TRY002
 
 
 class UIMessage(BaseModel):
