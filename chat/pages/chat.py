@@ -4,7 +4,7 @@ import reflex as rx
 
 from chat.components import chat
 from chat.components.templates import templates
-from chat.state import State
+from chat.state import State  # Import the state directly
 from chat.template import with_template
 
 
@@ -18,7 +18,6 @@ def chat_page() -> rx.Component:
                 rx.image(src="/logo.png", width="100px", height="auto"),
                 width="100%",
             ),
-            # Show templates component at the top
             templates(),
             rx.box(
                 rx.foreach(

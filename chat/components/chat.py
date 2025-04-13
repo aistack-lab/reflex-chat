@@ -69,7 +69,6 @@ def tool_call_component(tool_call: ToolCallInfo) -> rx.Component:
         rx.divider(),
         rx.text("Result:"),
         rx.code_block(
-            # Use string representation directly to avoid conditional evaluation
             str(tool_call.result),
             language="json",
             theme="dark",
