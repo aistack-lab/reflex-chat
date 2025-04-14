@@ -20,3 +20,4 @@ dist/*
 frontend.zip
 poetry.lock
 venv/
+.env
