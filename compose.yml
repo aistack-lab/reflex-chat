@@ -6,6 +6,8 @@ services:
       - 8000:8000
     depends_on:
       - redis
+    env_file:
+      - .env
   frontend:
     build:
       dockerfile: web.dockerfile
