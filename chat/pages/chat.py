@@ -18,7 +18,11 @@ def chat_page() -> rx.Component:
                 rx.image(src="/logo.png", width="100px", height="auto"),
                 width="100%",
             ),
-            templates(),
+            rx.cond(
+                State.chats[State.current_chat].length() == 0,
+                templates(),
+                rx.fragment(),
+            ),
             rx.box(
                 rx.foreach(
                     State.chats[State.current_chat],

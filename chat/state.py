@@ -52,7 +52,7 @@ DEFAULT_CHATS: dict[str, list[UIMessage]] = {"Intros": []}
 class State(rx.State):
     """The app state."""
 
-    chats: dict[str, list[UIMessage]] = DEFAULT_CHATS
+    chats: rx.Field[dict[str, list[UIMessage]]] = rx.field(DEFAULT_CHATS)
     current_chat = "Intros"
     processing: bool = False
     new_chat_name: str = ""
@@ -78,6 +78,7 @@ class State(rx.State):
         """
         self.current_chat = chat_name
 
+    @rx.event
     def set_input_question(self, value: str | rfx.CardItem) -> None:
         """Update the current input question.
 
