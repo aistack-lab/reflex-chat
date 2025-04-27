@@ -16,6 +16,7 @@ dependencies = [
     "reflex-audio-capture",
     "reflex-ai",
     "reflexions",
+    "reflex-nav-menu",
     "jira",
     "pyconify>=0.2.1",
 ]
